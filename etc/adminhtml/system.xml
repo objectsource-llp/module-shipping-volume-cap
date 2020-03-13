@@ -1,0 +1,40 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="objectsource" translate="label" sortOrder="10">
+            <label>Objectsource</label>
+        </tab>
+        <section id="volume_cap" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+            <class>separator-top</class>
+            <label>ShipperHQ Volume Cap</label>
+            <tab>objectsource</tab>
+            <resource>Objectsource_ShippingVolumeCap::config</resource>
+            <group id="config" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                <label>Configuration</label>
+                <field id="enable" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1">
+                    <label>Enable</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <field id="cut_off_frequency" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1">
+                    <label>Cut Off Frequency</label>
+                    <source_model>Magento\Cron\Model\Config\Source\Frequency</source_model>
+                    <backend_model>Objectsource\ShippingVolumeCap\Model\Config\Backend\CutOffCronSchedule</backend_model>
+                    <comment>Defines how often the shipping method counts are reset.</comment>
+                </field>
+
+                <field id="cut_off_time" translate="label" type="time" sortOrder="2" showInDefault="1" showInWebsite="1">
+                    <label>Cut Off Time</label>
+                    <comment>Defines how often the time in which the shipping method counts are reset.</comment>
+                </field>
+
+                <field id="method_caps" translate="label" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Method Caps</label>
+                    <frontend_model>Objectsource\ShippingVolumeCap\Block\System\Config\MethodCaps</frontend_model>
+                    <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+                    <comment>Values added here will be used to create the shipping method code. shq[Carrier Code]_[Method Code].</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
