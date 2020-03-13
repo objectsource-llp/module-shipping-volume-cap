@@ -3,7 +3,7 @@
     "description": "Magento 2 module to limit the amount of orders per shipping method each day, week or month",
     "require": {
         "php": "~7.0.0",
-        " ": "20.31.3",
+        "shipperhq/module-shipper": "~20.31",
         "magento/magento-composer-installer": "*"
     },
     "type": "magento2-module",
