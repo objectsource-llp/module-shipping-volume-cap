@@ -55,29 +55,32 @@ class ApplyVolumeCap
      */
     public function afterCollectRates(Shipper $subject, $result)
     {
-        if ($this->scopeConfig->isSetFlag('volume_cap/config/enable', ScopeInterface::SCOPE_WEBSITE)
-            &&
-            $result instanceof Result
-        ) {
-            $methodCaps = $this->serializer->unserialize(
-                $this->scopeConfig->getValue('volume_cap/config/method_caps', ScopeInterface::SCOPE_WEBSITE)
-            );
+        if (! $this->scopeConfig->isSetFlag('volume_cap/config/enable', ScopeInterface::SCOPE_WEBSITE)) {
+            return $result;
+        }
 
-            $ratesToRemove = [];
+        if (! $result instanceof Result) {
+            return $result;
+        }
 
-            foreach ($methodCaps as $methodCap) {
-                $shippingMethodCode = $this->getShippingMethodCode($methodCap);
-                $currentCount = $this->getCurrentCount($shippingMethodCode);
+        $methodCaps = $this->serializer->unserialize(
+            $this->scopeConfig->getValue('volume_cap/config/method_caps', ScopeInterface::SCOPE_WEBSITE)
+        );
 
-                if ($currentCount >= $methodCap['volume_cap']) {
-                    //Shipping method is to be excluded from $results array.
-                    $ratesToRemove[] = $shippingMethodCode;
-                }
+        $ratesToRemove = [];
+
+        foreach ($methodCaps as $methodCap) {
+            $shippingMethodCode = $this->getShippingMethodCode($methodCap);
+            $currentCount = $this->getCurrentCount($shippingMethodCode);
+
+            if ($currentCount >= $methodCap['volume_cap']) {
+                //Shipping method is to be excluded from $results array.
+                $ratesToRemove[] = $shippingMethodCode;
             }
+        }
 
-            if (!empty($ratesToRemove)) {
-                $this->removeShippingRates($result, $ratesToRemove);
-            }
+        if (!empty($ratesToRemove)) {
+            $this->removeShippingRates($result, $ratesToRemove);
         }
 
         return $result;
